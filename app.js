@@ -14,6 +14,9 @@ mongoose.connect(db);
 //models
 Card = require('./models/card.js');
 
+//func
+var cr = require("./cardRating.js");
+
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
@@ -22,22 +25,28 @@ app.get('/', function(req, res) {
   res.send("hello world");
 });
 
-//test db route
-app.get('/test', function(req,res) {
+//find card name route
+app.get('/find', function(req,res) {
+  Card
+    .find({
+      cardName: 'Mox Jet'
+    })
+    .exec(function(err, doc) {
+      if (err) return (err);
+      var out = doc[0].cardName;
+      res.send(out);
+    });
+});
 
-	//create a name card
-	var testCard = new Card({
-	  name: 'Herald of Anafenza'
-	  // money: 500000,
-	  // password: "BlackMesa",
-	  // collectedItems: ['Jade Sword', 'Magic Beans']
-	});
-	// within saving
-	testCard.save(function(err) {
-	  if (err) return (err);
-	  console.log('done');
-  	  res.send(testCard);
-	});
+//card rating route
+app.get('/rate', function(req,res) {
+  Card
+    .find({})
+    .exec(function(err, doc) {
+      if (err) return (err);
+		var str = cr.cardRating(doc);
+		res.json(str);
+    });
 });
 
 var PORT = process.env.PORT || 3000;

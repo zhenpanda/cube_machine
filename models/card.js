@@ -4,7 +4,17 @@ var Schema = mongoose.Schema;
 // Card Schema
 
 var cardSchema = new Schema({
-    name: String
+    cardName: String,
+    manaEfficiency: Number,
+    manaDevelopment: Number,
+    manaAccessibility: Number,
+    disparityGap: Number,
+    disruptionLevel: Number,
+    dependencyLevel: Number,
+    winContribution: Number,
+    synergeticEffect: Number,
+    dividendEffect: Number,
+    gamestateInevitability: Number
 });
 
 var Card = mongoose.model('Card', cardSchema);
