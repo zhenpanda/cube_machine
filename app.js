@@ -17,6 +17,9 @@ Card = require('./models/card.js');
 //func
 var cr = require("./cardRating.js");
 
+//seed files
+var sd_white = require('./db/seed_white.js');
+
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 
@@ -26,7 +29,7 @@ app.get('/', function(req, res) {
 });
 
 //find card name route
-app.get('/find', function(req,res) {
+/*app.get('/find', function(req,res) {
   Card
     .find({
       cardName: 'Mox Jet'
@@ -37,6 +40,13 @@ app.get('/find', function(req,res) {
       res.send(out);
     });
 });
+*/
+
+//card seed
+app.get('/seed', function(req, res) {
+  sd_white.seed();
+  res.redirect('/rate');
+});
 
 //card rating route
 app.get('/rate', function(req,res) {
@@ -44,6 +54,7 @@ app.get('/rate', function(req,res) {
     .find({})
     .exec(function(err, doc) {
       if (err) return (err);
+      	//use imported cr function
 		var str = cr.cardRating(doc);
 		res.json(str);
     });

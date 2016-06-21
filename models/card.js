@@ -10,11 +10,11 @@ var cardSchema = new Schema({
     manaAccessibility: Number,
     disparityGap: Number,
     disruptionLevel: Number,
-    dependencyLevel: Number,
+    playOpportunity: Number,
     winContribution: Number,
     synergeticEffect: Number,
     dividendEffect: Number,
-    gamestateInevitability: Number
+    gamestateControl: Number
 });
 
 var Card = mongoose.model('Card', cardSchema);
