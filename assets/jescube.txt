@@ -1,22 +1,25 @@
-Herald of Anafenza
-Kytheon, Hero of Akros
-Mother of Runes
-Soldier of the Pantheon
-Soul Warden
-Steppe Lynx
-Thraben Inspector
-Topplegeist
-Town Gossipmonger
-Accorder Paladin
-Ajani's Pridemate
-Anafenza, Kin-Tree Spirit
-Azorius Arrester
-Consul's Lieutenant
-Daring Skyjek
-Hanweir Militia Captain
-Hidden Dragonslayer
-Knight of the White Orchid
-Myrsmith
+//white
+
+	Herald of Anafenza
+	Kytheon, Hero of Akros
+	Mother of Runes
+	Soldier of the Pantheon
+	Soul Warden
+	Steppe Lynx
+	Thraben Inspector
+	Topplegeist
+	Town Gossipmonger
+
+	Accorder Paladin
+	Ajani's Pridemate
+	Anafenza, Kin-Tree Spirit
+	Azorius Arrester
+	Consul's Lieutenant
+	Daring Skyjek
+	Hanweir Militia Captain
+	Hidden Dragonslayer
+	Knight of the White Orchid
+	Myrsmith
 Precinct Captain
 Puresteel Paladin
 Seeker of the Way
@@ -47,6 +50,7 @@ Ajani Goldmane
 Elspeth, Knight-Errant
 Gideon, Ally of Zendikar
 Elspeth, Sun's Champion
+
 Court Homunculus
 Porcelain Legionnaire
 Path to Exile
@@ -61,6 +65,9 @@ Lingering Souls
 Glorious Anthem
 Oblivion Ring
 Nyx-Fleece Ram
+
+//blue
+
 Delver of Secrets
 Sidisi's Faithful
 Aquamoeba

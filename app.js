@@ -4,6 +4,7 @@ var app = express();
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var mtgjson = require('mtgjson');
 
 // mongoose.connect("mongodb://localhost/cube");
 // var db = mongoose.connection;
