@@ -1,25 +1,25 @@
 //white
 
-	Herald of Anafenza
-	Kytheon, Hero of Akros
-	Mother of Runes
-	Soldier of the Pantheon
-	Soul Warden
-	Steppe Lynx
-	Thraben Inspector
-	Topplegeist
-	Town Gossipmonger
+Herald of Anafenza
+Kytheon, Hero of Akros
+Mother of Runes
+Soldier of the Pantheon
+Soul Warden
+Steppe Lynx
+Thraben Inspector
+Topplegeist
+Town Gossipmonger
 
-	Accorder Paladin
-	Ajani's Pridemate
-	Anafenza, Kin-Tree Spirit
-	Azorius Arrester
-	Consul's Lieutenant
-	Daring Skyjek
-	Hanweir Militia Captain
-	Hidden Dragonslayer
-	Knight of the White Orchid
-	Myrsmith
+Accorder Paladin
+Ajani's Pridemate
+Anafenza, Kin-Tree Spirit
+Azorius Arrester
+Consul's Lieutenant
+Daring Skyjek
+Hanweir Militia Captain
+Hidden Dragonslayer
+Knight of the White Orchid
+Myrsmith
 Precinct Captain
 Puresteel Paladin
 Seeker of the Way

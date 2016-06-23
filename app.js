@@ -19,6 +19,7 @@ Card = require('./models/card.js');
 var cr = require("./cardRating.js");
 
 //seed files
+var sd_test = require('./db/seed.js');
 var sd_white = require('./db/seed_white.js');
 
 app.use(express.static(__dirname + "/public"));
@@ -45,7 +46,8 @@ app.get('/', function(req, res) {
 
 //card seed
 app.get('/seed', function(req, res) {
-  sd_white.seed();
+	sd_test.seed();
+  //sd_white.seed();
   res.redirect('/rate');
 });
 
