@@ -31,8 +31,11 @@ exports.cardEvaluation = function(inputCard) {
 	var manaAccessibilityStat;
 	var disparityGapStat;
 
+	var playOpportunityStat;
+
 	var gamestateControlStat;
 	var dividendEffectStat;
+	var gamestateControlStat;
 
 	//find text func
 	function wordInString(s, word){
@@ -50,28 +53,28 @@ exports.cardEvaluation = function(inputCard) {
 		        stat = 4;
 		        break;
 		    case 2:
-		        stat = 3;
+		        stat = 2;
 		        break;
 		    case 3:
-		        stat = 1;
+		        stat = 0.75;
 		        break;
 		    case 4:
 		        stat = -1;
 		        break;
 		    case 5:
-		        stat = -3;
+		        stat = -2.75;
 		        break;
 		    case 6:
 		        stat = -5;
 		        break;
 		    case 7:
-		        stat = -7;
+		        stat = -8;
 		        break;
 		    case 8:
-		        stat = -9;
+		        stat = -10;
 		        break;
     		default: 
-        		stat = -10;
+        		stat = -12;
         		break; 
 		}
 		return stat;
@@ -103,7 +106,7 @@ exports.cardEvaluation = function(inputCard) {
 		if (cardInfo.colors) {		
 			switch (cardInfo.colors.length) {
 			    case 1:
-			        stat = 3;
+			        stat = 2;
 			        break;
 			    case 2:
 			        stat = 0;
@@ -125,6 +128,9 @@ exports.cardEvaluation = function(inputCard) {
 			var extraPip = (cardInfo.manaCost.length/3) - cardInfo.colors.length;
 			//console.log(cardInfo.manaCost, extraPip + " extra pip");
 			stat = stat - (extraPip * 1.5);
+			if (wordInString(cardInfo.manaCost, "/")) {
+				stat = stat + 2;
+			};
 		}else{
 			stat = 5;
 		};
@@ -155,6 +161,21 @@ exports.cardEvaluation = function(inputCard) {
 	disparityGapStat = evalDisparityGapStat(inputCard);
 	//console.log(inputCard.name + " manaDev " + manaDevelopmentStat);
 
+	//Eval playOpportunity func
+	var evalPlayOpportunity = function(cardInfo) {
+		var stat = 0;
+		//console.log(cardInfo.types[0], cardInfo.subtypes);
+		if (cardInfo.types[0] == "Instant") {
+			stat = stat + 3;
+		};
+		if (cardInfo.subtypes == "Equipment") {
+			stat = stat - 2;
+		};
+
+		return stat;
+	};
+	playOpportunityStat = evalPlayOpportunity(inputCard);
+
 	//Eval dividendEffect func
 	var evalDividendEffect = function(cardInfo) {
 		var stat = 0;
@@ -171,6 +192,22 @@ exports.cardEvaluation = function(inputCard) {
 	};
 	dividendEffectStat = evalDividendEffect(inputCard);
 
+	//Eval gamestateControl func
+	var evalGamestateControl = function(cardInfo) {
+		var stat = 0;
+		var protections = ["from white", "from blue", "from black", "from red", "from green"];
+		if (wordInString(cardInfo.text, "protection")) {
+			for (var p = 0; p < protections.length; p++) {
+				if (wordInString(cardInfo.text, protections[p])) {
+					stat = stat + 1;
+				}
+			};
+		};
+
+		return stat;
+	};
+	gamestateControlStat = evalGamestateControl(inputCard);
+
 
 	/* ----------- ----------- ----------- */
     //test obj
@@ -181,11 +218,11 @@ exports.cardEvaluation = function(inputCard) {
         manaAccessibility: manaAccessibilityStat,
         disparityGap: disparityGapStat,
         disruptionLevel: 0,
-        playOpportunity: 0,
+        playOpportunity: playOpportunityStat,
         winContribution: 0,
         synergeticEffect: 0,
         dividendEffect: dividendEffectStat,
-        gamestateControl: 0
+        gamestateControl: gamestateControlStat
     };
 
     return cardStats;

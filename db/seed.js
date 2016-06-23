@@ -10,7 +10,8 @@ exports.seed = function() {;
         "Jace, the Mind Sculptor",
         "Birds of Paradise",
         "Sword of Fire and Ice",
-        "Jund Charm"
+        "Jund Charm",
+        "Rakdos Guildmage"
         ];
 
     //test card ary
