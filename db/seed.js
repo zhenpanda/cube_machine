@@ -2,11 +2,18 @@ exports.seed = function() {;
     //func
     var mtgjson = require('mtgjson');
     var cardsDB = "cardsDB";
-    var ce = require("../cardEval.js");
+    var ce = require("../func/cardEval.js");
     //earch for a single card in the mtgjsoin
-    var cs = require("../cardSearch.js");
+    var cs = require("../func/cardSearch.js");
+    
+    var testList = [
+        "Jace, the Mind Sculptor",
+        "Birds of Paradise",
+        "Sword of Fire and Ice",
+        "Jund Charm"
+        ];
+
     //test card ary
-    var testList = ["Jace, the Mind Sculptor","Birds of Paradise"];
     var testCards = [];
 
     mtgjson(function(err, data) {
@@ -35,6 +42,7 @@ exports.seed = function() {;
                 currentCard.save(function(err) {
                     if (err) return (err);
                 });
+                console.log("~~~~~~ ~~~~~~ ~~~~~~");
                 console.log("seeding " + entry.cardName);
             });
             //console.log('seeding testcards cards...');

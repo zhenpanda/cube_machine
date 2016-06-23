@@ -1,5 +1,4 @@
 exports.cardEvaluation = function(inputCard) {
-
     //console.log("This is the found card in mtgjson");
     //console.log(inputCard);
 	
@@ -29,6 +28,11 @@ exports.cardEvaluation = function(inputCard) {
 	//card stat categories variables
 	var manaEfficiencyStat;
 	var manaDevelopmentStat;
+	var manaAccessibilityStat;
+	var disparityGapStat;
+
+	var gamestateControlStat;
+	var dividendEffectStat;
 
 	//find text func
 	function wordInString(s, word){
@@ -76,43 +80,113 @@ exports.cardEvaluation = function(inputCard) {
 
 	//Eval manaDevelopment func
 	var evalManaDevelopment = function(cardInfo) {
-		var stat;
+		var stat = 0;
 		var manaRampWords = ["mana","land"];
 		for (var w = 0; w < manaRampWords.length; w++) {
-			var md = wordInString(inputCard.text, manaRampWords[w]);
-			//console.log(md);
-			if (md) {
-				stat = 5;
-			}else{
-				stat = 0;
+			if (wordInString(cardInfo.text, manaRampWords[w])) {
+				stat = stat + 5;
 			}
 		};
 		stat = stat - cardInfo.cmc;
 		if (stat < 0) {
 			stat = 0;
+		}
+		return stat;
+	};
+	manaDevelopmentStat = evalManaDevelopment(inputCard);
+	//console.log(inputCard.name + " manaDev " + manaDevelopmentStat);
+
+	//Eval manaAccessibility func
+	var evalManaAccessibility = function(cardInfo) {
+		var stat;
+		//console.log(inputCard.name + " colorID " + inputCard.colors);
+		if (cardInfo.colors) {		
+			switch (cardInfo.colors.length) {
+			    case 1:
+			        stat = 3;
+			        break;
+			    case 2:
+			        stat = 0;
+			        break;
+			    case 3:
+			        stat = -3;
+			        break;
+			    case 4:
+			        stat = -4;
+			        break;
+			    case 5:
+			        stat = -5;
+			        break;
+	    		default: 
+	        		stat = 0;
+	        		break; 
+			};
+			//check for double pip color cards
+			var extraPip = (cardInfo.manaCost.length/3) - cardInfo.colors.length;
+			//console.log(cardInfo.manaCost, extraPip + " extra pip");
+			stat = stat - (extraPip * 1.5);
+		}else{
+			stat = 5;
 		};
 
 		return stat;
 	};
-	manaDevelopmentStat = evalManaDevelopment(inputCard);
-	console.log(inputCard.name + " manaDev " + manaDevelopmentStat);
+	manaAccessibilityStat = evalManaAccessibility(inputCard);
 
+	//Eval disparityGap func
+	var evalDisparityGapStat = function(cardInfo) {
+		var stat = 0;
+		//draw spell
+		if (wordInString(cardInfo.text, "Draw")) {
+			stat = stat + 1;
+			//draw mulitple cards
+			if (wordInString(inputCard.text, "Draw two cards")) {
+				stat = stat + 1;
+			};
+			if (wordInString(inputCard.text, "Draw three cards")) {
+				stat = stat + 2;
+			};
+			if (wordInString(inputCard.text, "Draw four cards")) {
+				stat = stat + 3;
+			};
+		};
+		return stat;
+	};
+	disparityGapStat = evalDisparityGapStat(inputCard);
+	//console.log(inputCard.name + " manaDev " + manaDevelopmentStat);
+
+	//Eval dividendEffect func
+	var evalDividendEffect = function(cardInfo) {
+		var stat = 0;
+		if (cardInfo.types[0] == 'Planeswalker') {
+			stat = stat + 5;
+		};
+		var divWords = [":","Whenever","During your"];
+		for (var w = 0; w < divWords.length; w++) {
+			if (wordInString(cardInfo.text, divWords[w])) {
+				stat = stat + 1;
+			}
+		};
+		return stat;
+	};
+	dividendEffectStat = evalDividendEffect(inputCard);
+
+
+	/* ----------- ----------- ----------- */
     //test obj
     var cardStats = {
         cardName: inputCard.name,
         manaEfficiency: manaEfficiencyStat,
         manaDevelopment: manaDevelopmentStat,
-        manaAccessibility: 0,
-        disparityGap: 4,
-        disruptionLevel: 2,
+        manaAccessibility: manaAccessibilityStat,
+        disparityGap: disparityGapStat,
+        disruptionLevel: 0,
         playOpportunity: 0,
-        winContribution: 1,
+        winContribution: 0,
         synergeticEffect: 0,
-        dividendEffect: 5,
+        dividendEffect: dividendEffectStat,
         gamestateControl: 0
     };
-
-
 
     return cardStats;
 };

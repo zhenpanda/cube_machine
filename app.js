@@ -16,11 +16,10 @@ mongoose.connect(db);
 Card = require('./models/card.js');
 
 //func
-var cr = require("./cardRating.js");
+var cr = require("./func/cardRating.js");
 
 //seed files
 var sd_test = require('./db/seed.js');
-var sd_white = require('./db/seed_white.js');
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());

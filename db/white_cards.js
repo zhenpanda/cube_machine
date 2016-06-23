@@ -66,42 +66,5 @@ exports.seed = function() {
         "Oblivion Ring",
         "Nyx-Fleece Ram"
     ];
-
-    var whiteCards = [];
-    //white cards stats
-    var mtgjson = require('mtgjson');
-    var cardsDB = "cardsDB";
-	mtgjson(function(err, data) {
-		if (err) return console.log(err);
-        if (data) {
-            cardsDB = data;
-            //console.log(cardsDB);
-        	var cs = require("../cardSearch.js");
-
-            for (var c = 0; c < whiteCardsList.length; c++) {
-            	var currentSearch = cs.cardRating(cardsDB, whiteCardsList[c]);
-            	console.log("found" + currentSearch[0].name);
-            }
-
-            //********* ********* ********* ********* *********
-            //save and replace existing card of same name
-            whiteCards.forEach(function(entry) {
-                //console.log(entry);
-                var currentCard = new Card(entry);
-                Card
-                    .find({ cardName:entry.cardName })
-                    .remove()
-                    .exec();
-                currentCard.save(function(err) {
-                    if (err) return (err);
-                });
-                //console.log(whiteCards[s]);
-            });
-            console.log('seeding white cards...');
-            //********* ********* ********* ********* *********
-
-        }
-    });
-
     return 1;
 };
