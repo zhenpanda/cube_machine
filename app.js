@@ -17,7 +17,7 @@ Card = require('./models/card.js');
 
 //func
 var cr = require("./func/cardRating.js");
-var cl = require("./func/cardRating.js"); 
+var cl = require("./func/cardList.js"); 
 
 //seed files
 var sd_test = require('./db/seed.js');
@@ -71,7 +71,16 @@ app.get('/rate', function(req,res) {
 		res.json(str);
     });
 });
-
+app.get('/list', function(req,res) {
+  Card
+    .find({})
+    .exec(function(err, doc) {
+      if (err) return (err);
+      	//use imported cr function
+		var str = cl.cardList(doc);
+		res.json(str);
+    });
+});
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, function() {

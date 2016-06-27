@@ -72,6 +72,7 @@ exports.cardEvaluation = function(inputCard) {
     var manaDevelopmentStat;
     var manaAccessibilityStat;
     var disparityGapStat;
+    var disruptionLevelStat;
     var playOpportunityStat;
     var winContributionStat;
     var synergeticEffectStat;
@@ -91,7 +92,7 @@ exports.cardEvaluation = function(inputCard) {
     var evalManaEfficiency = function(cardInfo) {
         var stat = 0;
         console.log("evalEff ", cardInfo.name);
-		if (wordInString(cardInfo.text, "Delve") || wordInString(cardInfo.text, "Affinity")) {
+		if (wordInString(cardInfo.text, "Delve") || wordInString(cardInfo.text, "Affinity") || wordInString(cardInfo.text, "Suspend") ) {
                 stat = stat + 1;
         }else{    	
 	        switch (cardInfo.cmc) {
@@ -99,7 +100,7 @@ exports.cardEvaluation = function(inputCard) {
 	                stat = 5;
 	                break;
 	            case 1:
-	                stat = 4;
+	                stat = 3;
 	                break;
 	            case 2:
 	                stat = 2;
@@ -114,16 +115,16 @@ exports.cardEvaluation = function(inputCard) {
 	                stat = -2.75;
 	                break;
 	            case 6:
-	                stat = -5;
+	                stat = -4;
 	                break;
 	            case 7:
-	                stat = -8;
+	                stat = -6;
 	                break;
 	            case 8:
-	                stat = -10;
+	                stat = -8;
 	                break;
 	            default:
-	                stat = -12;
+	                stat = -10;
 	                break;
 	        }
         }
@@ -187,7 +188,7 @@ exports.cardEvaluation = function(inputCard) {
                 stat = stat + 2;
             };
         } else {
-            stat = 5;
+            stat = 0;
         };
 
         return stat;
@@ -215,21 +216,64 @@ exports.cardEvaluation = function(inputCard) {
         if (wordInString(inputCard.text, "flashback")) {
             stat = stat + 2;
         };  
+        if (wordInString(inputCard.text, "Search your library for a card")) {
+            stat = stat + 5;
+        };  
+
+        //edge case
+        if (inputCard.name == "Fact or Fiction") {
+        	stat = stat + 4;
+        };
 
         return stat;
     };
     disparityGapStat = evalDisparityGapStat(inputCard);
     //console.log(inputCard.name + " manaDev " + manaDevelopmentStat);
 
+    //Eval disruptionLevel func
+    var evalDisruptionLevel = function(cardInfo) {
+        var stat = 0;
+        //destroy
+        if (wordInString(inputCard.text, "Destroy target creature") || wordInString(inputCard.text, "destroy target creature")) {
+            stat = stat + 3.5;
+        };  
+        if (wordInString(inputCard.text, "destroy target nonartifact") || 
+        	wordInString(inputCard.text, "destroy target artifact")) {
+            stat = stat + 1.5;
+        };  
+
+        //damage
+        if (wordInString(inputCard.text, "1 damage")) {
+            stat = stat + 0.5;
+        };  
+        if (wordInString(inputCard.text, "2 damage")) {
+            stat = stat + 1;
+        };      
+        if (wordInString(inputCard.text, "3 damage")) {
+            stat = stat + 2;
+        };  
+
+        //tap
+        if (wordInString(inputCard.text, "tap target permanent")) {
+            stat = stat + 2;
+        }; 
+        if (wordInString(inputCard.text, "tap target creature")) {
+            stat = stat + 1;
+        }; 
+
+    	return stat;
+    };
+    disruptionLevelStat = evalDisruptionLevel(inputCard);
+
     //Eval playOpportunity func
     var evalPlayOpportunity = function(cardInfo) {
         var stat = 0;
         //console.log(cardInfo.types[0], cardInfo.subtypes);
         if (cardInfo.types[0] == "Instant") {
-            stat = stat + 3;
+            stat = stat + 1;
         };
         if (cardInfo.subtypes == "Equipment") {
-            stat = stat - 0;
+            stat = stat - 1;
         };
 
         return stat;
@@ -246,22 +290,20 @@ exports.cardEvaluation = function(inputCard) {
         }
 
         if (cardInfo.power) {
-        	stat = stat + (parseInt(cardInfo.power) * 0.4);
+        	stat = stat + (parseInt(cardInfo.power) * 0.5);
         }
 		
 		//conditional card check
 		if (cardInfo.name != "Odric, Lunarch Marshal") {
 	        //checking keywords
 			if ( parseInt(cardInfo.power) > 0) {
-	        	var evasionKeywords = ["flying"];
 	        	var evasionMinorKeywords = ["menace", "trample","intimidate","haste"];
-	        	var combatKeywords = ["first strike","prowess","Vigilance"];
+	        	var combatKeywords = ["first strike","prowess","Vigilance","Deathtouch"];
 			
-		        for (var e = 0; e < evasionKeywords.length; e++) {
-		            if (wordInString(cardInfo.text, evasionKeywords[e])) {
-		                stat = stat + 1;
-		            }
-		        }
+		        if (wordInString(inputCard.text, "Flying") || 
+		        	wordInString(inputCard.text, "flying")) {
+		            stat = stat + 1;
+		        };
 		        for (var m = 0; m < evasionMinorKeywords.length; m++) {
 		            if (wordInString(cardInfo.text, evasionMinorKeywords[m])) {
 		                stat = stat + 0.75;
@@ -291,7 +333,7 @@ exports.cardEvaluation = function(inputCard) {
 	        var plusKeywords = ['+1/+1','+2/+2','+3/+3','+4/+4','+5/+5','+6/+6'];
 	        for (var p = 0; p < plusKeywords.length; p++) {
 	        	if (cardInfo.text.indexOf(plusKeywords[p]) > -1) {
-	        		stat = stat + ((p + 1) * 0.4);
+	        		stat = stat + ((p + 1) * 0.5);
 	        	}
 	        }
     		
@@ -308,24 +350,38 @@ exports.cardEvaluation = function(inputCard) {
     };
     winContributionStat = evalWinContribution(inputCard);
 
-
     //Eval synergeticEffect func
     var evalSynergeticEffect = function(cardInfo) {
         var stat = 0;
-        var triggerWords = ["you may return target","graveyard to the battlefield","creature token onto the battlefield"];
+        var triggerWords = ["you may return target","graveyard to the battlefield"," creature tokens onto the battlefield", " creature token onto the battlefield"];
         var synergyWords = ["support 3"];
 
         for (var w = 0; w < triggerWords.length; w++) {
             if (wordInString(cardInfo.text, triggerWords[w])) {
                 stat = stat + 2;
+                if (triggerWords[w] == 2) {
+                }
             }
         };
+        //gravetitan
+        if (wordInString(cardInfo.text, "2 black Zombie")) {
+            stat = stat + 2;
+        }
 
         for (var s = 0; s < synergyWords.length; s++) {
             if (wordInString(cardInfo.text, synergyWords[s])) {
                 stat = stat + 3;
             }
         };
+        //broodmate
+        if (wordInString(cardInfo.text, "token with flying onto the battlefield")) {
+            stat = stat + 4;
+        }
+
+        //uptap
+        if (wordInString(cardInfo.text, "Untap all creatures and lands you control")) {
+            stat = stat + 2;
+        }
 
         return stat;
     };
@@ -335,19 +391,39 @@ exports.cardEvaluation = function(inputCard) {
     var evalDividendEffect = function(cardInfo) {
         var stat = 0;
         if (cardInfo.types[0] == 'Planeswalker') {
-            stat = stat + 6;
+            stat = stat + 5;
+            //check draw walkers
+            if (wordInString(inputCard.text, "Draw three cards")) {
+                stat = stat + 3;
+            };
+
         };
-        var divWords = [":", "Whenever"];
+        var divWords = [": ", "Whenever","each other player's untap step"];
         for (var w = 0; w < divWords.length; w++) {
             if (wordInString(cardInfo.text, divWords[w])) {
-                stat = stat + 2;
-                if (divWords[w] == 1) {
-		            if (wordInString(inputCard.text, "draw two cards")) {
-		                stat = stat + 2;
-		            };
-                }
+                stat = stat + 1;
+                //spheix
+	            if (wordInString(inputCard.text, "draw two")) {
+	                stat = stat + 3;
+	            };
+		        //titan
+		        if (wordInString(inputCard.text, "2 black Zombie")) {
+		            stat = stat + 2;
+		        };
+		        if (wordInString(inputCard.text, "3 damage")) {
+		            stat = stat + 2;
+		        };  
+
+		        if (wordInString(inputCard.text, "tap target permanent")) {
+		            stat = stat + 2;
+		        }; 
+		        if (wordInString(inputCard.text, "tap target creature")) {
+		            stat = stat + 1;
+		        }; 
             }
         };
+
+
         return stat;
     };
     dividendEffectStat = evalDividendEffect(inputCard);
@@ -377,7 +453,7 @@ exports.cardEvaluation = function(inputCard) {
         manaDevelopment: manaDevelopmentStat,
         manaAccessibility: manaAccessibilityStat,
         disparityGap: disparityGapStat,
-        disruptionLevel: 0,
+        disruptionLevel: disruptionLevelStat,
         playOpportunity: playOpportunityStat,
         winContribution: winContributionStat,
         synergeticEffect: synergeticEffectStat,
