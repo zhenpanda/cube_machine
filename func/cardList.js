@@ -1,4 +1,4 @@
-exports.cardRating = function(inputCardData) {
+exports.cardList = function(inputCardData) {
 	//return inputCardData + " is the card name...";
 	var cardList = [];
 	for (var i = 0; i < inputCardData.length; i++) {
@@ -20,8 +20,8 @@ exports.cardRating = function(inputCardData) {
 		//display each card in collection
 		var cardstat = {
 			name: inputCardData[i].cardName,
-			rating: parseFloat(cardStock) * 8,
-			stat: inputCardData[i]
+			rating: parseFloat(cardStock) * 7.5,
+			//stat: inputCardData[i]
 		}
 		cardList.push(cardstat);
 	};

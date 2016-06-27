@@ -17,9 +17,12 @@ Card = require('./models/card.js');
 
 //func
 var cr = require("./func/cardRating.js");
+var cl = require("./func/cardRating.js"); 
 
 //seed files
 var sd_test = require('./db/seed.js');
+var sd_white = require('./db/white_cards.js');
+var sd_all = require('./db/all_cards.js');
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
@@ -45,8 +48,14 @@ app.get('/', function(req, res) {
 
 //card seed
 app.get('/seed', function(req, res) {
-	sd_test.seed();
+  sd_test.seed();
   //sd_white.seed();
+  res.redirect('/rate');
+});
+
+//card seed
+app.get('/all', function(req, res) {
+  sd_all.seed();
   res.redirect('/rate');
 });
 
@@ -58,9 +67,11 @@ app.get('/rate', function(req,res) {
       if (err) return (err);
       	//use imported cr function
 		var str = cr.cardRating(doc);
+		//var str = cl.cardList(doc);
 		res.json(str);
     });
 });
+
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, function() {

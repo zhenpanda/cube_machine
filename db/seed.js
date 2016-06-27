@@ -11,7 +11,8 @@ exports.seed = function() {;
         "Birds of Paradise",
         "Sword of Fire and Ice",
         "Jund Charm",
-        "Rakdos Guildmage"
+        "Rakdos Guildmage",
+        "Akroma, Angel of Wrath"
         ];
 
     //test card ary

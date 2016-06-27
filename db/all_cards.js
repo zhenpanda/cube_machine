@@ -66,6 +66,74 @@ exports.seed = function() {
         "Oblivion Ring",
         "Nyx-Fleece Ram"
     ];
+    var blueCardsList = [
+        "Delver of Secrets",
+        "Sidisi's Faithful",
+        "Aquamoeba",
+        "Coralhelm Guide",
+        "Deranged Assistant",
+        "Jace, Vryn's Prodigy",
+        "Merfolk Looter",
+        "Mindshrieker",
+        "Snapcaster Mage",
+        "Spiketail Hatchling",
+        "Thing in the Ice",
+        "Eldrazi Skyspawner",
+        "Man-o'-War",
+        "Ruination Guide",
+        "Trinket Mage",
+        "Vendilion Clique",
+        "Aberrant Researcher",
+        "Soulsworn Spirit",
+        "Talrand, Sky Summoner",
+        "Venser, Shaper Savant",
+        "Whirler Rogue",
+        "Mulldrifter",
+        //"Aethersnipe",
+        "Consecrated Sphinx",
+        "Drowner of Hope",
+        "Frost Titan",
+        "Keiga, the Tide Star",
+        "Somber Hoverguard",
+        "Jace Beleren",
+        "Jace, the Mind Sculptor",
+        "Tezzeret the Seeker",
+        "Etherium Sculptor",
+        "Master of Etherium",
+        "Brainstorm",
+        "Counterspell",
+        "Disperse",
+        "Impulse",
+        "Mana Leak",
+        "Negate",
+        "Remand",
+        "Remove Soul",
+        "Circular Logic",
+        "Steady Progress",
+        "Fact or Fiction",
+        "Gifts Ungiven",
+        "Ray of Command",
+        "Repeal",
+        "Dig Through Time",
+        "Clutch of Currents",
+        "Ponder",
+        "Preordain",
+        "Serum Visions",
+        "Compulsive Research",
+        "Fabricate",
+        "Sleep",
+        "Tezzeret's Gambit",
+        "Welcome to the Fold",
+        "Bribery",
+        "Thoughtcast",
+        "Treasure Cruise",
+        "Ghostly Wings",
+        "Chamber of Manipulation",
+        "Thopter Spy Network"
+    ];
+
+    //all cards arry
+    var allCardsList = whiteCardsList.concat(blueCardsList);
 
     //func
     var mtgjson = require('mtgjson');
@@ -83,8 +151,8 @@ exports.seed = function() {
             //console.log(cardsDB);
             cardsDB = data;
 
-            for (var c = 0; c < whiteCardsList.length; c++) {
-                var currentSearch = cs.cardRating(cardsDB, whiteCardsList[c]);
+            for (var c = 0; c < allCardsList.length; c++) {
+                var currentSearch = cs.cardRating(cardsDB, allCardsList[c]);
                 //console.log("found card" + currentSearch[0].name);
 
                 //pass in full card info from mtgjson to get evaluation
@@ -103,10 +171,10 @@ exports.seed = function() {
                 currentCard.save(function(err) {
                     if (err) return (err);
                 });
-                //console.log("~~~~~~ ~~~~~~ ~~~~~~");
-                //console.log("seeding " + entry.cardName);
+                console.log("~~~~~~ ~~~~~~ ~~~~~~");
+                console.log("seeding " + entry.cardName);
             });
-            console.log('seeded white cards...');
+            //console.log('seeded white cards...');
             //********* ********* ********* ********* *********
         }
     });
