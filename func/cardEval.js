@@ -97,34 +97,34 @@ exports.cardEvaluation = function(inputCard) {
         }else{    	
 	        switch (cardInfo.cmc) {
 	            case 0:
-	                stat = 7;
-	                break;
-	            case 1:
 	                stat = 5;
 	                break;
+	            case 1:
+	                stat = 4.75;
+	                break;
 	            case 2:
-	                stat = 4;
+	                stat = 3.25;
 	                break;
 	            case 3:
-	                stat = 1.75;
+	                stat = 1.15;
 	                break;
 	            case 4:
-	                stat = 0;
+	                stat = 0.45;
 	                break;
 	            case 5:
-	                stat = -2.75;
+	                stat = -2.35;
 	                break;
 	            case 6:
-	                stat = -5;
+	                stat = -5.75;
 	                break;
 	            case 7:
-	                stat = -8;
+	                stat = -8.95;
 	                break;
 	            case 8:
-	                stat = -12;
+	                stat = -12.55;
 	                break;
 	            default:
-	                stat = -15;
+	                stat = -15.95;
 	                break;
 	        }
         }
@@ -180,19 +180,19 @@ exports.cardEvaluation = function(inputCard) {
         if (cardInfo.colors) {
             switch (cardInfo.colors.length) {
                 case 1:
-                    stat = -3.55;
+                    stat = -4.75;
                     break;
                 case 2:
-                    stat = -8.75;
+                    stat = -8.95;
                     break;
                 case 3:
-                    stat = -12.55;
+                    stat = -14.55;
                     break;
                 case 4:
-                    stat = -15.75;
+                    stat = -19.95;
                     break;
                 case 5:
-                    stat = -20.45;
+                    stat = -25.45;
                     break;
                 default:
                     stat = 0;
@@ -213,7 +213,7 @@ exports.cardEvaluation = function(inputCard) {
 
         //edgecase
         if (wordInString(cardInfo.text, "Devoid")) {
-            stat = stat - 3.5;
+            stat = stat - 4.5;
         };
 
         return stat;
@@ -273,7 +273,7 @@ exports.cardEvaluation = function(inputCard) {
 
         //destroy
         if (wordInString(inputCard.text, "Destroy target creature") || wordInString(inputCard.text, "destroy target creature")) {
-            stat = stat + 2.5;
+            stat = stat + 2.75;
         };  
         if (wordInString(inputCard.text, "destroy target nonartifact") || 
         	wordInString(inputCard.text, "destroy target artifact")) {
@@ -329,14 +329,14 @@ exports.cardEvaluation = function(inputCard) {
 
         //return creature
         if (wordInString(inputCard.text, "Return target creature to its owner's hand")) {
-            stat = stat + 2;
+            stat = stat + 2.15;
         };  
         //return permanet
         if (wordInString(inputCard.text, "Return target permanent to its owner's hand")) {
-            stat = stat + 2.75;
+            stat = stat + 2.95;
         }; 
         if (wordInString(inputCard.text, "return target spell or permanent")) {
-            stat = stat + 3.5;
+            stat = stat + 3.75;
         }; 
 
 
@@ -398,7 +398,7 @@ exports.cardEvaluation = function(inputCard) {
             stat = stat + 3;
         };
         if (cardInfo.subtypes == "Equipment") {
-            stat = stat - 1;
+            stat = stat - 2;
         };
 
         return stat;
@@ -486,9 +486,9 @@ exports.cardEvaluation = function(inputCard) {
         if (wordInString(inputCard.text, "2 black Zombie")) {
             stat = stat + 2;
         };
-        if (wordInString(inputCard.text, "3 damage")) {
-            stat = stat + 2;
-        };  
+        // if (wordInString(inputCard.text, "3 damage")) {
+        //     stat = stat + 2;
+        // };  
         //frost titan
         if (wordInString(inputCard.text, "tap target permanent")) {
             stat = stat + 2;
@@ -713,9 +713,12 @@ exports.cardEvaluation = function(inputCard) {
             stat = stat + 1.5;
         }
         //visara
-        if (wordInString(inputCard.text, "Destroy target creature") || wordInString(inputCard.text, "destroy target creature")) {
-            stat = stat + 2.5;
-        };  
+        if (cardInfo.name == "Visara the Dreadful") {
+	        if (wordInString(inputCard.text, "Destroy target creature") || wordInString(inputCard.text, "destroy target creature")) {
+	            stat = stat + 2.5;
+	        };  
+        }; 
+
 
         return stat;
     };
@@ -728,7 +731,7 @@ exports.cardEvaluation = function(inputCard) {
         if (wordInString(cardInfo.text, "protection")) {
             for (var p = 0; p < protections.length; p++) {
                 if (wordInString(cardInfo.text, protections[p])) {
-                    stat = stat + 3.5;
+                    stat = stat + 3.75;
                 }
             };
         };

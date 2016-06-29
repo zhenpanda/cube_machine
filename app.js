@@ -19,9 +19,14 @@ Card = require('./models/card.js');
 var cr = require("./func/cardRating.js");
 var cl = require("./func/cardList.js"); 
 
+//meta
+var meta = require("./func/setMeta.js");
+
+//cube files
+var jessCube = require('./sets/jessCube.js');
+
 //seed files
 var sd_test = require('./db/seed.js');
-var sd_white = require('./db/white_cards.js');
 var sd_all = require('./db/all_cards.js');
 
 app.use(express.static(__dirname + "/public"));
@@ -32,31 +37,14 @@ app.get('/', function(req, res) {
   res.send("hello world");
 });
 
-//find card name route
-/*app.get('/find', function(req,res) {
-  Card
-    .find({
-      cardName: 'Mox Jet'
-    })
-    .exec(function(err, doc) {
-      if (err) return (err);
-      var out = doc[0].cardName;
-      res.send(out);
-    });
-});
-*/
-
-//card seed
-app.get('/seed', function(req, res) {
-  sd_test.seed();
-  //sd_white.seed();
-  res.redirect('/rate');
-});
-
 //card seed
 app.get('/all', function(req, res) {
-  sd_all.seed();
-  res.redirect('/rate');
+	//grab all the card put into array
+	var inputCube = jessCube.cube();
+	//console.log(inputCube);
+	//put the array in seeder
+	sd_all.seed(inputCube);
+	res.redirect('/rate');
 });
 
 //card rating route
@@ -65,6 +53,7 @@ app.get('/rate', function(req,res) {
     .find({})
     .exec(function(err, doc) {
       if (err) return (err);
+
       	//use imported cr function
 		var str = cr.cardRating(doc);
 		//var str = cl.cardList(doc);
@@ -81,6 +70,17 @@ app.get('/list', function(req,res) {
 		res.json(str);
     });
 });
+
+//card setmeta
+app.get('/meta', function(req, res) {
+	var inputCube = jessCube.cube();
+
+	var str = meta.setMeta(inputCube);
+	//console.log("meta out");
+	res.json({check: "console"});
+});
+
+
 
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, function() {

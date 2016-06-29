@@ -20,7 +20,7 @@ exports.cardRating = function(inputCardData) {
 		//display each card in collection
 		var cardstat = {
 			name: inputCardData[i].cardName,
-			rating: parseFloat(cardStock) * 8.75,
+			rating: parseFloat(cardStock) * 8,
 			stat: inputCardData[i]
 		}
 		cardList.push(cardstat);
