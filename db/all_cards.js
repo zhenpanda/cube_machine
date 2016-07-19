@@ -8,6 +8,9 @@ exports.seed = function(inputSet) {
     var ce = require("../func/cardEval.js");
     //earch for a single card in the mtgjsoin
     var cs = require("../func/cardSearch.js");
+    
+    //test card ary
+    var testCards = [];
 
     mtgjson(function(err, data) {
         if (err) return console.log(err);
