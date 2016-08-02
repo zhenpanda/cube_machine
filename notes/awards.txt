@@ -1,0 +1,31 @@
+Monthly Champion Award -> Winner of cube draft.
+
+New Challenger Award -> New Player to the draft group.
+
+Comeback Kid Award -> Lose every round of the draft, but winning the last round.
+
+Clean House Award -> Winner of the cube draft without losing a single game.
+
+King Slayer Award -> Win the cube draft by defeating last month's champion in the final round.
+
+Level Up Award -> Win more total games than last cube draft.
+
+Fallen Hero -> Win no games as past champion.
+
+Signal Controller -> Defeat both players who is sitting to your right and left during this draft.
+
+Draft Master -> 100 games in the draft
+
+Hot Streak -> Win 10 games without losing
+
+The Undertaker -> Defeat an opponent who won 10 games in a row.
+
+The Fighter -> Win 6 round in a row losing to each opponent one.
+
+The Delayer -> Draw total of 10 games in 3 drafts.
+
+Maker's Mark -> Win the draft as the owner of the cube without losing a game.
+
+Dr.Frankenstein -> Lose every game in a draft as the owner of the cube.
+
+Rookie of the year -> Win the draft as a new challenger.
