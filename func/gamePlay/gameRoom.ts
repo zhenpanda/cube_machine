@@ -8,12 +8,13 @@ class GameRoom {
     this.playerNames = playerNames;
     this.players = [];
   }
-  greet() {
+  public greet() {
     console.log(this.playerNames);
     return this.playerNames;
   }
   // creating player record profile
-  setup() {
+  public setup() {
+     console.log("Setting up draft...");
     for(let p of this.playerNames) {
       this.players.push({
         name: p,
@@ -21,26 +22,30 @@ class GameRoom {
         wins: 0,
         loss: 0,
         draws: 0,
-        defeatedOpponents: [],
-        victoriousOpponents: [],
-        records: [],
-        awards: []
+        playedOpponents: [],
+        possibleOpponents: [],
+        idealOpponents: [],
+        record: []
       });
     }
     //console.log(this.players);
   }
 };
-
 // let room = new GameRoom("Arron","Ben","Casey");
 // room.greet();
 
 class DraftRoom extends GameRoom {
-  tournamentFormat: string;
-  constructor(public playerNames:[string]) {
+  draftName: string;
+  draftDate: {};
+  format: string;
+  structure: string;
+  matchInprogress = [];
+  constructor(public playerNames:[string], date:{}, format:string, structure:string) {
     //inherit game room parent
-    super();
+    super(playerNames);
+    this.format = format;
+    this.structure = structure;
   }
-
   // randomly seat the players
   randomSeating() {
     let totalSeat = this.playerNames.length;
@@ -49,7 +54,7 @@ class DraftRoom extends GameRoom {
     for (let s = 1; s < totalSeat+1; s++) {
       seatNums.push(s);
     };
-    console.log(seatNums);
+    // console.log(seatNums);
     // shuffle func
     Array.prototype.shuffle = function() {
         let input = this;
@@ -77,35 +82,72 @@ class DraftRoom extends GameRoom {
     }
     console.log(seatingCall);
   }
-
   // set bye rule
   setBye(set) {
+    // create matches
     if(set) {
-
     }else{
       console.log("No bye is given by design, bye will be assign randomly.");
+      // players will be pair off to matches returns matches and 1 bye
+      this.matchup();
     }
   }
   // round 1 pairings
-  initPairing(format) {
-    this.tournamentFormat = format;
-    if(format == "Causal") {
-      console.log("This is set to " + this.tournamentFormat + " tournament format.");
-      console.log("Each round is set to ~50 mins long, no 5 turns rule.");
+  initPairing(bye) {
+    if(this.structure == "Causal") {
+      console.log("This is set to " + this.structure + " tournament format.");
+      console.log("Each round is set to ~50 mins long, but rounds will not go to turns.");
       // fit pairing or bye
       if(this.playerNames.length % 2 == 0) {
         console.log("Fit pairing");
       }else{
-        console.log("One player will be getting a first round bye");
-        this.setBye();
+        console.log("Odd number of total players, one player will be getting a First round bye");
+        this.setBye(bye);
         // console.log(this.players);
       }
     }
   }
+  // matchup maker
+  matchup(byePlayer) {
+    // init setup
+    console.log("Round one pairings are...");
+    // find the pair farest away
+    let midSeat = Math.floor(this.players.length / 2);
+    if(byePlayer) {
+      // pairing with bye announced
+    }else{
+      // even pairings no byes
+
+    }
+  }
+   // start the draft
+   kickOff() {
+     console.log("Starting draft now.");
+     super.setup();
+     this.randomSeating();
+     this.initPairing();
+   }
 };
 
 // testing
-let draft = new DraftRoom(["Abe","Ben","Cat","Dan","El","Frd","Gil","Hop","Ike"]);
-draft.setup();
-draft.randomSeating();
-draft.initPairing("Causal");
+console.log("~~~~~~~~~~ ~~~~~~~~~~ ~~~~~~~~~~ ~~~~~~~~~~ ~~~~~~~~~~");
+let playerPool = ["Abe","Ben","Cat","Dan","El","Frd","Gil","Hop","Ike"];
+let date = {month: 8, day: 10, year: 2016};
+let draft = new DraftRoom(playerPool, date, "JesCube", "Causal");
+// start draft
+draft.kickOff();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
