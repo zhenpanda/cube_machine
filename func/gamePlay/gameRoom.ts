@@ -39,12 +39,16 @@ class DraftRoom extends GameRoom {
   draftDate: {};
   format: string;
   structure: string;
-  matchInprogress = [];
+  seatOrder: [];
+  activeGames: [];
   constructor(public playerNames:[string], date:{}, format:string, structure:string) {
     //inherit game room parent
     super(playerNames);
+    this.draftDate = date;
     this.format = format;
     this.structure = structure;
+    this.seatOrder = [];
+    this.activeGames = [];
   }
   // randomly seat the players
   randomSeating() {
@@ -77,6 +81,8 @@ class DraftRoom extends GameRoom {
       for (let c = 0; c < this.players.length; c++) {
           if (this.players[c].seat == a+1) {
               seatingCall = seatingCall + "Seat number " + (a+1) + " " + this.players[c].name + "\n";
+              //let num = this.players[c].seat;
+              this.seatOrder.push( this.players[c].name );
           }
       }
     }
@@ -111,19 +117,56 @@ class DraftRoom extends GameRoom {
   matchup(byePlayer) {
     // init setup
     console.log("Round one pairings are...");
+    console.log("Event " + this.draftDate.month + "/" + this.draftDate.day + "/" + this.draftDate.year );
     // find the pair farest away
     let midSeat = Math.floor(this.players.length / 2);
     if(byePlayer) {
       // pairing with bye announced
     }else{
-      // even pairings no byes
-
+      // try to pair until no more can be paired up
+      // console.log(this.seatOrder);
+      for(let p = 0; p < midSeat; p++) {
+        // let matchInfo = String(this.seatOrder[p] + " vs " + this.seatOrder[p+midSeat])
+        this.game("new", this.seatOrder[p], this.seatOrder[p+midSeat]);
+      }
+      // console.log(matches);
+      // console.log(this.seatOrder[this.players.length-1] + " - bye");
+      for (let g = 0; g < this.activeGames.length; g++) {
+        console.log("Match #"+ this.activeGames[g].game + " " + this.activeGames[g].playerOne + " vs " + this.activeGames[g].playerTwo);
+      }
+    }
+  }
+  // game maker
+  game(state, player1, player2, result, gameNum) {
+    if(state == "new") {
+      let gameNum = ( parseInt(this.activeGames.length)+1);
+      this.activeGames.push({
+        game: gameNum,
+        playerOne: player1,
+        playerTwo: player2
+      })
+    }else if(state == "fin") {
+      if(gameNum) {
+        // report result
+        if(result) {
+            // remove finished game
+            this.activeGames.splice(gameNum, 1);
+            console.log("Active games...");
+            console.log(this.activeGames);
+          }else{
+            console.log("No result posted for Match#" + gameNum);
+          }
+        }else{
+          console.log("No gameNum provided");
+        }
     }
   }
    // start the draft
    kickOff() {
      console.log("Starting draft now.");
+     // gameroom setup func
      super.setup();
+     // draft funcs
      this.randomSeating();
      this.initPairing();
    }
@@ -136,7 +179,7 @@ let date = {month: 8, day: 10, year: 2016};
 let draft = new DraftRoom(playerPool, date, "JesCube", "Causal");
 // start draft
 draft.kickOff();
-
+draft.game("fin", "","",[2,1], 3);
 
 
 
