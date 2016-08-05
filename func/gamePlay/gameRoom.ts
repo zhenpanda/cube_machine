@@ -25,7 +25,8 @@ class GameRoom {
         playedOpponents: [],
         possibleOpponents: [],
         idealOpponents: [],
-        record: []
+        record: [],
+        bye: false
       });
     }
     //console.log(this.players);
@@ -82,21 +83,11 @@ class DraftRoom extends GameRoom {
           if (this.players[c].seat == a+1) {
               seatingCall = seatingCall + "Seat number " + (a+1) + " " + this.players[c].name + "\n";
               //let num = this.players[c].seat;
-              this.seatOrder.push( this.players[c].name );
+              this.seatOrder.push( this.players[c] );
           }
       }
     }
     console.log(seatingCall);
-  }
-  // set bye rule
-  setBye(set) {
-    // create matches
-    if(set) {
-    }else{
-      console.log("No bye is given by design, bye will be assign randomly.");
-      // players will be pair off to matches returns matches and 1 bye
-      this.matchup();
-    }
   }
   // round 1 pairings
   initPairing(bye) {
@@ -113,6 +104,16 @@ class DraftRoom extends GameRoom {
       }
     }
   }
+  // set bye rule
+  setBye(set) {
+    // create matches
+    if(set) {
+    }else{
+      console.log("No bye has been designed, bye will be assign randomly.");
+      // players will be pair off to matches returns matches and 1 bye
+      this.matchup();
+    }
+  }
   // matchup maker
   matchup(byePlayer) {
     // init setup
@@ -127,38 +128,70 @@ class DraftRoom extends GameRoom {
       // console.log(this.seatOrder);
       for(let p = 0; p < midSeat; p++) {
         // let matchInfo = String(this.seatOrder[p] + " vs " + this.seatOrder[p+midSeat])
+        // console.log("seatOrder", this.seatOrder[p], this.seatOrder[p+midSeat]),
         this.game("new", this.seatOrder[p], this.seatOrder[p+midSeat]);
       }
       // console.log(matches);
-      // console.log(this.seatOrder[this.players.length-1] + " - bye");
       for (let g = 0; g < this.activeGames.length; g++) {
-        console.log("Match #"+ this.activeGames[g].game + " " + this.activeGames[g].playerOne + " vs " + this.activeGames[g].playerTwo);
+        if(this.activeGames[g].playerTwo) {
+          console.log("Match #"+ this.activeGames[g].game + " " + this.activeGames[g].playerOne.name + " vs " + this.activeGames[g].playerTwo.name);
+        }else{
+          if(this.seatOrder[this.players.length-1]) {
+            // bye player
+            console.log(this.seatOrder[this.players.length-1] + " - bye");
+          }
+        }
       }
     }
   }
-  // game maker
+  // game maker, creates games between players
   game(state, player1, player2, result, gameNum) {
     if(state == "new") {
       let gameNum = ( parseInt(this.activeGames.length)+1);
       this.activeGames.push({
         game: gameNum,
         playerOne: player1,
-        playerTwo: player2
+        playerTwo: player2,
       })
+      // put opponents into played array for each player object
+      for (let a = 0; a < this.players.length; a++) {
+          if(this.players[a].name == player1.name) {
+            this.players[a].playedOpponents.push(player2.name)
+          }else if(this.players[a].name == player2.name) {
+            this.players[a].playedOpponents.push(player1.name)
+          }
+      }
     }else if(state == "fin") {
       if(gameNum) {
         // report result
         if(result) {
-            // remove finished game
+            // report result
+            // remove finished game from array
             this.activeGames.splice(gameNum, 1);
-            console.log("Active games...");
-            console.log(this.activeGames);
+            // display active game still going on
+            this.announceGames("yell");
           }else{
             console.log("No result posted for Match#" + gameNum);
           }
         }else{
           console.log("No gameNum provided");
         }
+    }
+  }
+  // announce the games of each player
+  announceGames(mode) {
+    if(mode == "yell") {
+        if(this.activeGames.length > 0) {
+          console.log("Current active games are....");
+          for (let v = 0; v < this.activeGames.length; v++) {
+            console.log("Ongoing Match #"+ this.activeGames[v].game + " " + this.activeGames[v].playerOne.name + " vs " + this.activeGames[v].playerTwo.name);
+          }
+          console.log("...please finish these game in a timely manner.")
+        }else{
+          console.log("There are no active games going on.")
+        }
+    }else if(mode == "standing") {
+      // standing of players
     }
   }
    // start the draft
@@ -170,6 +203,17 @@ class DraftRoom extends GameRoom {
      this.randomSeating();
      this.initPairing();
    }
+   // report a player's current status
+   playersStats() {
+     // display each player's stats
+     for (let p = 0; p < this.players.length; p++) {
+         // console.log(this.players[p]);
+         console.log("----- -----");
+         console.log(this.players[p].name, "'s played opponents are...'");
+         console.log(this.players[p].playedOpponents);
+
+     }
+   }
 };
 
 // testing
@@ -179,8 +223,9 @@ let date = {month: 8, day: 10, year: 2016};
 let draft = new DraftRoom(playerPool, date, "JesCube", "Causal");
 // start draft
 draft.kickOff();
+// report finished game
 draft.game("fin", "","",[2,1], 3);
-
+draft.playersStats();
 
 
 
