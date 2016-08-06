@@ -167,10 +167,22 @@ class DraftRoom extends GameRoom {
         // report result
         if(result) {
             // report results by finding the active game
-            console.log(this.activeGames);
+            // console.log(this.activeGames);
             for (let g = 0; g < this.activeGames.length; g++) {
                 if (this.activeGames[g].game == gameNum) {
                     console.log("Match finished btw:" this.activeGames[g].playerOne.name, this.activeGames[g].playerTwo.name)
+                    //  report player's result
+                    let winner;
+                    let loser;
+                    if (result[0] == 2) {
+                        winner = this.findPlayerByName(this.activeGames[g].playerOne.name);
+                        loser = this.findPlayerByName(this.activeGames[g].playerTwo.name);
+                    }else if (result[1] == 2) {
+                      winner = this.findPlayerByName(this.activeGames[g].playerTwo.name);
+                      loser = this.findPlayerByName(this.activeGames[g].playerOne.name);
+                    }
+                    winner.wins = winner.wins + 1;
+                    loser.loss = loser.loss + 1;
                     // remove finished game from array
                     this.activeGames.splice(g, 1);
                 }
@@ -222,10 +234,9 @@ class DraftRoom extends GameRoom {
    // report a player's current status
    playersStats(playerNum) {
      // console.log(this.players[p]);
-     console.log("----- ----- -----");
+     console.log("-----");
      console.log(this.players[playerNum].name, this.players[playerNum].wins, this.players[playerNum].loss);
-     console.log("Played opponents are...'");
-     console.log(this.players[playerNum].playedOpponents);
+     // ary func cut elements of passed in ary from ary calling the func
      Array.prototype.diff = function(a) {
          return this.filter(function(i) {
            return a.indexOf(i) < 0;
@@ -233,27 +244,35 @@ class DraftRoom extends GameRoom {
      };
      // removed played opponents and self, populate unplayedOpponetns ary
      let allOpponents = this.playerNames;
+     // possibleOpponents is an ary removing played opponents from a pool of all player names
      let possibleOpponents = allOpponents.diff(this.players[playerNum].playedOpponents);
-     this.players[playerNum].unplayedOpponents = possibleOpponents.diff([this.players[playerNum].name]);
+     let playerSelf = [this.players[playerNum].name];
+     let cleanPossibleOpponents = possibleOpponents.diff(playerSelf);
+     this.players[playerNum].unplayedOpponents = cleanPossibleOpponents;
+      // console.log("current unplayed opponents", this.players[playerNum].unplayedOpponents);
      // console.log(this.players[playerNum].unplayedOpponents);
      let unplayedOpponentObjs = [];
-     for (let u = 0; u < this.players[playerNum].unplayedOpponents.length; u++) {
+     // go thr all pos opponents
+     for (let u = 0; u < cleanPossibleOpponents.length; u++) {
         // find the player objects for each unplayed opponent
-         let playerObj = this.findPlayerByName(this.players[playerNum].unplayedOpponents[u])
+         let playerObj = this.findPlayerByName(cleanPossibleOpponents[u])
          unplayedOpponentObjs.push(playerObj);
      }
      // console.log(unplayedOpponentObjs);
      let idealOpponents = [];
+     // check if each opponent in unplayed opponent has same record
      for (let o = 0; o < unplayedOpponentObjs.length; o++) {
-         if (unplayedOpponentObjs[o].wins == this.players[playerNum].wins) {
-            idealOpponents.push(unplayedOpponentObjs[o].name);
+      // find player with same num of win or loss
+         if (unplayedOpponentObjs[o].wins == this.players[playerNum].wins && unplayedOpponentObjs[o].loss == this.players[playerNum].loss) {
+           idealOpponents.push(unplayedOpponentObjs[o].name);
          }
      }
-     // populate ideal oppponent, filter possible opponents
-     let uplayedOpp = this.players[playerNum].unplayedOpponents;
-
-     console.log("Possible opponents are", possibleOpponents);
+     let unplayedOpp = this.players[playerNum].unplayedOpponents;
+     // remove ideal opponents, from possible opponents
+     let trimedPossibleOpponents = cleanPossibleOpponents.diff(idealOpponents);
      console.log("Ideal opponents are", idealOpponents);
+     console.log("Possible opponents are", trimedPossibleOpponents);
+     console.log("Played opponents are", this.players[playerNum].playedOpponents);
    }
 };
 
@@ -264,13 +283,15 @@ let date = {month: 8, day: 10, year: 2016};
 let draft = new DraftRoom(playerPool, date, "JesCube", "Causal");
 // start draft
 draft.kickOff();
-// report finished game
+// report finished game, active games starts at 1
 draft.game("fin", "","",[2,1], 1);
 draft.game("fin", "","",[2,1], 2);
-// display player stats
+
+// display each player stats
 for (let t = 0; t < draft.players.length; t++) {
     draft.playersStats(t);
 }
+// creating a game from inputs
 
 
 
