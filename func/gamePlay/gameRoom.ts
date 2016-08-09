@@ -286,6 +286,7 @@ draft.kickOff();
 // report finished game, active games starts at 1
 draft.game("fin", "","",[2,1], 1);
 draft.game("fin", "","",[2,1], 2);
+// start a new game with error
 
 // display each player stats
 for (let t = 0; t < draft.players.length; t++) {

@@ -1,0 +1,31 @@
+1. setup the node server (backend)
+
+  npm install express-generator -g
+  express cube_machine --hbs
+
+2. setup angular 2
+
+  npm install --save @angular/core @angular/common @angular/compiler @angular/http @angular/platform-browser @angular/platform-browser-dynamic @angular/router @angular/upgrade
+
+  npm install --save systemjs reflect-metadata typings zone.js rxjs core-js
+
+
+3. build new file setup
+
+    assets/app/app.component.html
+    assets/app/app.component.ts
+    assets/app/boot.ts
+
+    typings.json
+
+    npm install --save dev gulp
+    npm install --save gulp-typescript
+    npm install --save-dev gulp-sourcemaps
+
+    tsconfig.json
+    gulpfile.js
+
+  4. change 'index.hbs'
+
+    npm install --save del
+    create systemjs.config.js

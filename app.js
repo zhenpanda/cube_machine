@@ -1,88 +1,75 @@
 var express = require('express');
 var path = require('path');
-var app = express();
+var favicon = require('serve-favicon');
 var logger = require('morgan');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var mtgjson = require('mtgjson');
 
-// mongoose.connect("mongodb://localhost/cube");
-// var db = mongoose.connection;
-/*Mongoose Connect*/
-var db = 'mongodb://localhost/cube';
-mongoose.connect(db);
+var appRoutes = require('./routes/index');
+// var users = require('./routes/users');
 
-//models
-Card = require('./models/card.js');
+var app = express();
 
-//func
-var cr = require("./func/cardRating.js");
-var cl = require("./func/cardList.js"); 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
 
-//meta
-var meta = require("./func/setMeta.js");
-
-//cube files
-var jessCube = require('./sets/jessCube.js');
-
-//seed files
-var sd_test = require('./db/seed.js');
-var sd_all = require('./db/all_cards.js');
-
-app.use(express.static(__dirname + "/public"));
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-//home route
-app.get('/', function(req, res) {
-  res.send("hello world");
+app.use('/', appRoutes);
+// app.use('/users', users);
+
+// allow other servers to do stuff in our server when request is sent
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST','GET','PATCH','DELETE');
+  next();
 });
 
-//card seed
-app.get('/all', function(req, res) {
-	//grab all the card put into array
-	var inputCube = jessCube.cube();
-	//console.log(inputCube);
-	//put the array in seeder
-	sd_all.seed(inputCube);
-	res.redirect('/rate');
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-//card rating route
-app.get('/rate', function(req,res) {
-  Card
-    .find({})
-    .exec(function(err, doc) {
-      if (err) return (err);
+// error handlers
 
-      	//use imported cr function
-		var str = cr.cardRating(doc);
-		//var str = cl.cardList(doc);
-		res.json(str);
-    });
-});
-app.get('/list', function(req,res) {
-  Card
-    .find({})
-    .exec(function(err, doc) {
-      if (err) return (err);
-      	//use imported cr function
-		var str = cl.cardList(doc);
-		res.json(str);
-    });
-});
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    // res.render('error', {
+    //   message: err.message,
+    //   error: err
+    // });
+    res.json({
+      message: err.message,
+      error: {}
+    })
+  });
+}
 
-//card setmeta
-app.get('/meta', function(req, res) {
-	var inputCube = jessCube.cube();
-
-	var str = meta.setMeta(inputCube);
-	//console.log("meta out");
-	res.json({check: "console"});
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  // res.render('error', {
+  //   message: err.message,
+  //   error: {}
+  // });
+  res.json({
+    message: err.message,
+    error: {}
+  })
 });
 
 
-
-var PORT = process.env.PORT || 3000;
-app.listen(PORT, function() {
-  console.log("listenin on port:" + PORT);
-});
+module.exports = app;
