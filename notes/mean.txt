@@ -29,3 +29,4 @@
 
     npm install --save del
     create systemjs.config.js
+    create systemjs.builder.js
