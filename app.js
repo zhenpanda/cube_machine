@@ -6,9 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var appRoutes = require('./routes/index');
-// var users = require('./routes/users');
+var userRoutes = require('./routes/users');
 
 var app = express();
+
+/*Mongoose Connect*/
+var mongoose = require('mongoose');
+var db = 'mongodb://localhost/cubeMachine';
+mongoose.connect(db);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', appRoutes);
-// app.use('/users', users);
+app.use('/users', userRoutes);
 
 // allow other servers to do stuff in our server when request is sent
 app.use(function(req, res, next) {
