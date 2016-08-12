@@ -1,1 +1,10 @@
-<h1>CubeMachine</h1>
+<h1 class="col-xs-8 col-xs-offset-2">CubeMachine</h1>
+
+<div class="row">
+  <section class="col-xs-8 col-xs-offset-2">
+    <!-- two way databinding with ngModel -->
+    <input type="text" [(ngModel)] = "message.content">
+      <!-- [message] is @Input() while "message is the message: Message = new Message()" -->
+      <my-message [message]="message"></my-message>
+  </section>
+</div>
