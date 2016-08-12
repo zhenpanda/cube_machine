@@ -1,6 +1,9 @@
 <div class="row">
   <section class="col-xs-8 col-xs-offset-2">
-    <article class="panel panel-default">
+    <!-- ngStyle example of attributes directives -->
+    <!-- *ngIf conditional statement -->
+    <article class="panel panel-default" [ngStyle]="{'background-color': color}" (mouseenter)= "color = 'red'" (mouseleave) ="color = 'white'" *ngIf="show">
+      <!-- remove from DOM if show = false -->
       <div class="panel-body">
         <!-- databinding from app.components.ts -->
         {{ message.content }}
@@ -9,7 +12,8 @@
         <div class="author">
           {{ message.author }}
           <div class="config">
-            <a href="#">Edit</a>
+            <!-- click event binding -->
+            <a href="#" (click)="onClick()">Edit</a>
             <a href="#">Delete</a>
           </div>
         </div>

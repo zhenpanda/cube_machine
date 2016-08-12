@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 
 // import ts file
 import {Message} from './message';
@@ -16,5 +16,15 @@ export class MessageComponent {
 
   // allow user input
   @Input() message: Message;
-  
+  // output event emitter
+  @Output() editClicked = new EventEmitter<string>();
+  color = "white";
+  show = true;
+
+  //onClick event method
+  onClick() {
+    // emit the event
+    this.editClicked.emit('changed');
+  }
+
 }

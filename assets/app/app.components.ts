@@ -1,8 +1,12 @@
-import {Component} from '@angular/core';
+// keep the app component as light as possible
+
 // import components
-import {MessageComponent} from './messages/message.component';
+import {Component} from '@angular/core';
 // import in message obj contrusctor
 import {Message} from './messages/message';
+import {MessageListComponent} from './messages/message-list.component';
+import {MessageInputComponent} from './messages/message-input.component';
+import {MessageService} from "./messages/message.service";
 
 // moduleId connects app parts
 // component is loaded into views/index.hbs
@@ -10,13 +14,13 @@ import {Message} from './messages/message';
     moduleId: module.id,
     selector:'my-app',
     templateUrl: 'app.component.html',
-    directives: [MessageComponent]
+    directives: [MessageListComponent, MessageInputComponent]
 })
+
 export class AppComponent {
   // message = {
   //   content: 'A message',
   //   author: 'Max'
   // };
-  message: Message = new Message('A new message', null, 'Max');
 }
 // databinding to components
