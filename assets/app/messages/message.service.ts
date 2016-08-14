@@ -2,8 +2,10 @@
 import { Message } from "./message";
 
 export class MessageService {
+    // MessageService will contain all the data shared by different components of the app
     messages: Message[] = [];
 
+    //MessageService will contain all the method used on those data
     addMessage(message: Message) {
         this.messages.push(message);
     }

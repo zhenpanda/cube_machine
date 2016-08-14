@@ -2,6 +2,8 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 
 // import ts file
 import {Message} from './message';
+// import the MessageService
+import {MessageService} from "./message.service";
 
 @Component({
   moduleId: module.id,
@@ -21,10 +23,20 @@ export class MessageComponent {
   color = "white";
   show = true;
 
+  constructor (private _messageService: MessageService) {};
+
   //onClick event method
-  onClick() {
-    // emit the event
-    this.editClicked.emit('changed');
+  // onClick() {
+  //   // emit the event
+  //   this.editClicked.emit('changed');
+  // }
+
+  onEdit() {
+    this._messageService.editMessage(this.message);
+  }
+
+  onDelete() {
+    this._messageService.deleteMessage(this.message);
   }
 
 }

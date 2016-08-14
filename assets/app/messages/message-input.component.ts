@@ -3,16 +3,9 @@ import {Message} from './message';
 import {MessageService} from "./message.service";
 
 @Component({
+  moduleId: module.id,
   selector: 'my-message-input',
-  template: `
-  <section class="col-md-8 col-md-offset-2">
-    <div class="form-group">
-      <label for="content">Content</label>
-      <input type="text" class="form-control" id="content" #input>
-      <button type="submit" class="btn btn-primary" (click)="onCreate(input.value)">Send Message</button>
-    </div>
-  </section>
-  `
+  templateUrl: 'message-input.component.html'
   // inject the messageService into MessageInputComponent by providers
   //providers: [MessageService]
 })
@@ -29,4 +22,7 @@ export class MessageInputComponent {
     //calling the instanted obj's method
     this._messageService.addMessage(message);
   }
+
+
+
 }

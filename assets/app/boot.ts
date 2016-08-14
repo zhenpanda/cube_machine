@@ -9,5 +9,5 @@ import { provide, enableProdMode } from '@angular/core';
 enableProdMode();
 
 
-// ary provids shared service
+// MessageService ary provids shared service
 bootstrap(AppComponent, [MessageService]);
